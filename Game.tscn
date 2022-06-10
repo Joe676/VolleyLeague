@@ -1,0 +1,109 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://TaxiCar.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Ball.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Ball.gd" type="Script" id=3]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 50, 1, 25 )
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.956863, 0.752941, 0.490196, 1 )
+
+[sub_resource type="CubeMesh" id=3]
+material = SubResource( 2 )
+size = Vector3( 100, 2, 50 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_transparent = true
+albedo_color = Color( 1, 1, 1, 0.862745 )
+
+[sub_resource type="CubeMesh" id=5]
+material = SubResource( 4 )
+size = Vector3( 1, 6, 50 )
+
+[sub_resource type="BoxShape" id=6]
+extents = Vector3( 0.5, 3, 25 )
+
+[sub_resource type="BoxShape" id=8]
+extents = Vector3( 1, 25, 25 )
+
+[sub_resource type="BoxShape" id=9]
+extents = Vector3( 1, 25, 25 )
+
+[sub_resource type="BoxShape" id=7]
+extents = Vector3( 50, 25, 1 )
+
+[node name="Game" type="Spatial"]
+
+[node name="World" type="Spatial" parent="."]
+
+[node name="StaticBody" type="StaticBody" parent="World"]
+
+[node name="CollisionShape" type="CollisionShape" parent="World/StaticBody"]
+shape = SubResource( 1 )
+
+[node name="Ground" type="MeshInstance" parent="World/StaticBody"]
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="Net" type="MeshInstance" parent="World/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )
+mesh = SubResource( 5 )
+material/0 = null
+
+[node name="CollisionShape2" type="CollisionShape" parent="World/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )
+shape = SubResource( 6 )
+
+[node name="back_wall1" type="CollisionShape" parent="World/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 51, 25, 0 )
+shape = SubResource( 8 )
+
+[node name="back_wall2" type="CollisionShape" parent="World/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -51, 25, 0 )
+shape = SubResource( 9 )
+
+[node name="side_wall1" type="CollisionShape" parent="World/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25, 26 )
+shape = SubResource( 7 )
+
+[node name="side_wall2" type="CollisionShape" parent="World/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25, -26 )
+shape = SubResource( 7 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.939692, 0.34202, 0, -0.34202, 0.939692, 0, 18, 40 )
+fov = 80.0
+
+[node name="taxi" parent="." instance=ExtResource( 1 )]
+transform = Transform( -3.25841e-07, 0, 2, 0, 2, 0, -2, 0, -3.25841e-07, 40.9505, 0.964743, 0 )
+MAX_SPEED = 70
+MAX_FORCE = 120
+JUMP_FORCE = 50
+fall_acceleration = 80
+
+[node name="taxi2" parent="." instance=ExtResource( 1 )]
+transform = Transform( -3.25841e-07, 0, -2, 0, 2, 0, 2, 0, -3.25841e-07, -40.95, 0.965, 0 )
+MAX_SPEED = 70
+MAX_FORCE = 120
+JUMP_FORCE = 50
+fall_acceleration = 80
+player_number = 2
+move_left_action = "move_left2"
+move_right_action = "move_right2"
+move_up_action = "move_up2"
+move_down_action = "move_down2"
+jump_action = "jump2"
+
+[node name="Ball" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.641507, 20.6623, 0 )
+gravity_scale = 5.0
+contacts_reported = 1
+contact_monitor = true
+script = ExtResource( 3 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( 0.917734, -0.252503, -0.306605, 0.397196, 0.583417, 0.708421, 0, -0.771924, 0.635715, -3.8147e-06, 23.8968, 47.8701 )
+
+[connection signal="body_entered" from="Ball" to="Ball" method="_on_Ball_body_entered"]
